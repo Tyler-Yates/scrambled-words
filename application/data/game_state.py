@@ -1,10 +1,8 @@
 import logging
 import random
 import string
-from typing import List, Dict
+from typing import List
 
-from application.data.game_tile import GameTile
-from application.data.game_update import GameUpdate
 from application.data.word_manager import WordManager
 
 TOTAL_TILES = 25
@@ -125,6 +123,6 @@ class GameState:
     @staticmethod
     def _generate_tiles() -> List[str]:
         tiles = []
-        for i in range(0, 25):
+        for i in range(0, TOTAL_TILES):
             tiles[i] = random.choice(string.ascii_lowercase)
         return tiles
