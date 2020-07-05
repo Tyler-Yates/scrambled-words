@@ -6,9 +6,7 @@ from application.data.game_tile import GameTile
 from application.data.game_update import GameUpdate
 from application.data.word_manager import WordManager
 
-WORD_COUNT = 25
-BLUE_TEAM_TILES = 9
-RED_TEAM_TILES = 8
+TOTAL_TILES = 25
 
 LOG = logging.getLogger("GameState")
 
