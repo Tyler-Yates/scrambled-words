@@ -1,9 +1,43 @@
 from typing import List
 
 from data.game_state import GameState
+from tests.data.test_word_manager import TestWordManager
 
 
 class TestGameState:
+    def setup_method(self):
+        # Create a word manager that accepts any word
+        word_manager = TestWordManager()
+
+        tiles = [
+            "s", "a", "b", "e", "r",
+            "j", "t", "t", "s", "x",
+            "z", "z", "z", "z", "z",
+            "s", "z", "z", "z", "z",
+            "z", "z", "z", "z", "z"
+        ]
+
+        self.game_state = GameState("test", word_manager, tiles)
+
+    def test_word_is_on_board_valid(self):
+        assert self.game_state._word_is_on_board("set") is True
+        assert self.game_state._word_is_on_board("sat") is True
+        assert self.game_state._word_is_on_board("state") is True
+        assert self.game_state._word_is_on_board("states") is True
+        assert self.game_state._word_is_on_board("rest") is True
+        assert self.game_state._word_is_on_board("saber") is True
+        assert self.game_state._word_is_on_board("stab") is True
+        assert self.game_state._word_is_on_board("best") is True
+        assert self.game_state._word_is_on_board("bat") is True
+        assert self.game_state._word_is_on_board("bats") is True
+
+    def test_word_is_on_board_invalid(self):
+        assert self.game_state._word_is_on_board("armory") is False
+
+    def test_word_is_on_board_invalid_reuse(self):
+        assert self.game_state._word_is_on_board("test") is False
+        assert self.game_state._word_is_on_board("jaba") is False
+
     def test_tiles_are_neighbors_0(self):
         TestGameState._assert_neighbors(0, [1, 5, 6])
 

@@ -17,13 +17,16 @@ class GameState:
     Class representing the state of a game.
     """
 
-    def __init__(self, game_name: str, word_manager: WordManager):
+    def __init__(self, game_name: str, word_manager: WordManager, tiles: List[str] = None):
         """
-        Generates a new, random game state.
+        Generates a new game state.
         """
         self.game_name = game_name
         self.word_manager = word_manager
-        self.game_tiles = GameState._generate_tiles()
+        if tiles:
+            self.game_tiles = tiles
+        else:
+            self.game_tiles = GameState._generate_tiles()
 
         self._log_info("Created new game")
 
@@ -47,16 +50,37 @@ class GameState:
             return False
 
     def _word_is_on_board(self, guessed_word: str) -> bool:
-        possible_paths = []
+        possible_paths: List[List[int]] = None
 
-        for i in range(0, len(self.game_tiles)):
-            if self.game_tiles[i] == guessed_word[0]:
-                possible_paths.append(i)
+        for character in guessed_word:
+            if (possible_paths is not None) and (len(possible_paths) == 0):
+                break
 
-        for character in guessed_word[1:]:
+            character_locations = []
             for i in range(0, len(self.game_tiles)):
                 if self.game_tiles[i] == character:
-                    pass  # TODO algorithm
+                    character_locations.append(i)
+
+            if possible_paths is None:
+                possible_paths = [[val] for val in character_locations]
+            else:
+                new_possible_paths: List[List[int]] = []
+                for character_location in character_locations:
+                    for possible_path in possible_paths:
+                        # We cannot use the same tile multiple times in one word
+                        if character_location in possible_path:
+                            continue
+
+                        # If the character location is a neighbor of the last tile on a possible
+                        # path then we add this as a new possible bath for the next character
+                        if GameState._tiles_are_neighbors(character_location, possible_path[-1]):
+                            new_possible_path = possible_path.copy()
+                            new_possible_path.append(character_location)
+                            new_possible_paths.append(new_possible_path)
+
+                possible_paths = new_possible_paths
+        print(f"Possible paths for '{guessed_word}': {possible_paths}")
+        return len(possible_paths) > 0
 
     def _log_info(self, log_message: str):
         LOG.info("[%s] %s", self.game_name, log_message)
