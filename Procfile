@@ -1,0 +1,1 @@
+web: gunicorn --worker-class eventlet -w 1 "application:create_flask_app()" --log-file=-
