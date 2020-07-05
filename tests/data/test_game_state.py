@@ -1,5 +1,6 @@
 from typing import List
 
+from application import WordManager
 from data.game_state import GameState
 from tests.data.test_word_manager import TestWordManager
 
@@ -18,6 +19,18 @@ class TestGameState:
         ]
 
         self.game_state = GameState("test", word_manager, tiles)
+
+    def test_guess_word_valid(self):
+        assert self.game_state.guess_word("player", "set") is True
+        assert self.game_state.guess_word("player", "states") is True
+
+    def test_guess_word_invalid(self):
+        assert self.game_state.guess_word("player", "armory") is False
+        assert self.game_state.guess_word("player", "test") is False
+
+    def test_guess_word_unrecognized(self):
+        self.game_state.word_manager = WordManager({"test"})
+        assert self.game_state.guess_word("player", "word") is False
 
     def test_word_is_on_board_valid(self):
         assert self.game_state._word_is_on_board("set") is True
