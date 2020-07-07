@@ -10,6 +10,7 @@
     -webkit-box-sizing: border-box;
     border: 1px solid black !important;
     color: black;
+    text-transform: uppercase;
 }
 
 .btn-tile:disabled {

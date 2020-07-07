@@ -10,7 +10,7 @@ class WordManager:
             self.words = set()
             with open(f"{FILE_LOCATION}/../static/words.txt", mode="r") as word_file:
                 for line in word_file:
-                    line = line.strip().upper()
+                    line = line.strip().lower()
                     self.words.add(line)
 
             print(f"Loaded {len(self.words)} words.")
@@ -18,4 +18,4 @@ class WordManager:
             self.words = words
 
     def is_word(self, word: str) -> bool:
-        return word in self.words
+        return word.lower() in self.words

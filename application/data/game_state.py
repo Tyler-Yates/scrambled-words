@@ -41,6 +41,9 @@ class GameState:
         Returns:
             whether the guess was successful
         """
+        # Ensure the guessed word is all lower-case to match with the tiles
+        guessed_word = guessed_word.lower()
+
         if self.word_manager.is_word(guessed_word):
             word_is_on_board = self._word_is_on_board(guessed_word)
             if word_is_on_board:
@@ -65,7 +68,7 @@ class GameState:
             # Find all locations where the current character is on the board.
             character_locations = []
             for i in range(0, len(self.game_tiles)):
-                if self.game_tiles[i].lower() == character.lower():
+                if self.game_tiles[i] == character:
                     character_locations.append(i)
 
             if possible_paths is None:
@@ -124,5 +127,5 @@ class GameState:
     def _generate_tiles() -> List[str]:
         tiles = []
         for i in range(0, TOTAL_TILES):
-            tiles.append(random.choice(string.ascii_uppercase))
+            tiles.append(random.choice(string.ascii_lowercase))
         return tiles
