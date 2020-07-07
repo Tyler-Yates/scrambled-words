@@ -21,4 +21,14 @@
     padding: 0;
     border: 1px solid black;
     width: 500px;
+    margin-left: 0;
+}
+
+#valid-word-container {
+    width: 250px;
+    margin-right: 0;
+}
+
+#valid-word-container p {
+    margin-bottom: 0;
 }

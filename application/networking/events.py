@@ -11,7 +11,7 @@ LOG = logging.getLogger("GameState")
 
 
 @socketio.on("join")
-def joined(message):
+def joined_event(message):
     room = message["room"]
     join_room(room)
     session_id = flask.request.sid
@@ -20,7 +20,7 @@ def joined(message):
 
 
 @socketio.on("guess")
-def guessed_word(message):
+def guess_word_event(message):
     session_id = flask.request.sid
     LOG.debug(f"Received guess from {session_id}: {message}")
 
@@ -30,11 +30,11 @@ def guessed_word(message):
     game_state = _get_game_manager().get_game_state(room)
     reply = game_state.guess_word(session_id, guessed_word)
 
-    emit("guess_reply", {"valid": reply}, to=session_id)
+    emit("guess_reply", {"valid": reply, "guess": guessed_word}, to=session_id)
 
 
 @socketio.on("new_game")
-def new_game(message):
+def new_game_event(message):
     LOG.debug(f"Received new_game: {message}")
 
     room = message["room"]

@@ -10,6 +10,13 @@ $(document).ready(function () {
 
     socket.on('guess_reply', function (data) {
         console.log(data);
+
+        if (data.valid) {
+            const paragraphNode = document.createElement("P");
+            const textNode = document.createTextNode(data.guess.toUpperCase());
+            paragraphNode.appendChild(textNode);
+            document.getElementById("valid-word-container").appendChild(paragraphNode);
+        }
     });
 
     socket.on('reload_page', function (data) {

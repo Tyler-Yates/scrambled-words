@@ -21,22 +21,27 @@
 </div>
 
 <div id="button-container" class="container">
-    <div id="inner-button-container" class="container">
-        {% for tile in game_state.game_tiles %}
-            {% if loop.index0 is divisibleby(5) %}
-                {% if loop.index0 != 0 %}
-                    </div>
-                {% endif %}
-                <div class="row btn-row no-gutters">
-            {% endif %}
-
-            <div class="col">
-                <button id="button-{{ tile }}" class="btn btn-tile btn-light btn-block rounded-0" disabled>
-                    {{ tile }}
-                </button>
-            </div>
-        {% endfor %}
+    <div class="row">
+        <div id="valid-word-container" class="container">
+            <p><strong>Valid guessed words:</strong></p>
         </div>
+        <div id="inner-button-container" class="container">
+            {% for tile in game_state.game_tiles %}
+                {% if loop.index0 is divisibleby(5) %}
+                    {% if loop.index0 != 0 %}
+                        </div>
+                    {% endif %}
+                    <div class="row btn-row no-gutters">
+                {% endif %}
+
+                <div class="col">
+                    <button id="button-{{ tile }}" class="btn btn-tile btn-light btn-block rounded-0" disabled>
+                        {{ tile }}
+                    </button>
+                </div>
+            {% endfor %}
+            </div>
+    </div>
 </div>
 </div>
 
