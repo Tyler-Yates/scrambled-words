@@ -14,21 +14,22 @@ LOG = logging.getLogger("GameState")
 def joined_event(message):
     room = message["room"]
     join_room(room)
-    session_id = flask.request.sid
+    ip_address = flask.request.remote_addr
 
-    LOG.debug(f"User {session_id} has joined room {room}")
+    LOG.debug(f"User {ip_address} has joined room {room}")
 
 
 @socketio.on("guess")
 def guess_word_event(message):
     session_id = flask.request.sid
-    LOG.debug(f"Received guess from {session_id}: {message}")
+    ip_address = flask.request.remote_addr
+    LOG.info(f"Received guess from {ip_address}: {message}")
 
     room = message["room"]
     guessed_word = message["guess"]
 
     game_state = _get_game_manager().get_game_state(room)
-    reply = game_state.guess_word(session_id, guessed_word)
+    reply = game_state.guess_word(ip_address, guessed_word)
 
     emit("guess_reply", {"valid": reply, "guess": guessed_word}, to=session_id)
 

@@ -1,7 +1,7 @@
 import logging
 import random
 import string
-from typing import List
+from typing import List, Set, Dict
 
 from application.data.word_manager import WordManager
 
@@ -26,6 +26,9 @@ class GameState:
         else:
             self.game_tiles = GameState._generate_tiles()
 
+        # Dictionary from player ID to Set of valid guesses
+        self.valid_guesses: Dict[str, Set[str]] = {}
+
         self._log_info("Created new game")
 
     def guess_word(self, player_id: str, guessed_word: str) -> bool:
@@ -44,10 +47,21 @@ class GameState:
         # Ensure the guessed word is all lower-case to match with the tiles
         guessed_word = guessed_word.lower()
 
+        if guessed_word in self.valid_guesses.get(player_id, set()):
+            self._log_info(f"{player_id} guess word '{guessed_word}' has already been guessed successfully by player")
+            return False
+
         if self.word_manager.is_word(guessed_word):
             word_is_on_board = self._word_is_on_board(guessed_word)
             if word_is_on_board:
                 self._log_info(f"{player_id} guess word '{guessed_word}' is a valid word")
+
+                if player_id in self.valid_guesses:
+                    self.valid_guesses.get(player_id).add(guessed_word)
+                else:
+                    valid_guesses = set()
+                    valid_guesses.add(guessed_word)
+                    self.valid_guesses[player_id] = valid_guesses
             else:
                 self._log_info(f"{player_id} guess word '{guessed_word}' is not on the board")
 
