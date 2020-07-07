@@ -14,9 +14,16 @@ LOG = logging.getLogger("GameState")
 def joined_event(message):
     room = message["room"]
     join_room(room)
+
+    session_id = flask.request.sid
     ip_address = flask.request.remote_addr
 
-    LOG.debug(f"User {ip_address} has joined room {room}")
+    game_state = _get_game_manager().get_game_state(room)
+    if game_state:
+        LOG.info(f"User {ip_address} has joined room {room}")
+        emit("valid_guesses_refresh", {"guesses": list(game_state.get_player_valid_guesses(ip_address))}, to=session_id)
+    else:
+        LOG.warning(f"User {ip_address} has joined invalid room {room}")
 
 
 @socketio.on("guess")

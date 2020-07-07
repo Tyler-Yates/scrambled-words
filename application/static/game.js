@@ -12,10 +12,7 @@ $(document).ready(function () {
         console.log(data);
 
         if (data.valid) {
-            const paragraphNode = document.createElement("P");
-            const textNode = document.createTextNode(data.guess.toUpperCase());
-            paragraphNode.appendChild(textNode);
-            document.getElementById("valid-words-div").appendChild(paragraphNode);
+            add_valid_guess(data.guess);
         }
     });
 
@@ -25,8 +22,26 @@ $(document).ready(function () {
         window.location.reload(true);
     });
 
+    socket.on("valid_guesses_refresh", function (data) {
+        console.log(data);
+
+        const validWordsDiv = document.getElementById("valid-words-div");
+        validWordsDiv.innerHTML = "";
+
+        data.guesses.forEach(function (item, index) {
+            add_valid_guess(item);
+        });
+    });
+
     add_button_event_listeners(socket, roomName);
 });
+
+function add_valid_guess(valid_guess) {
+    const paragraphNode = document.createElement("P");
+    const textNode = document.createTextNode(valid_guess.toUpperCase());
+    paragraphNode.appendChild(textNode);
+    document.getElementById("valid-words-div").appendChild(paragraphNode);
+}
 
 // Function that sets up the logic for emitting a socket message when clicking on a button.
 function add_button_event_listeners(socket, roomName) {
