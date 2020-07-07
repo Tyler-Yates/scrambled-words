@@ -23,7 +23,11 @@
 <div id="button-container" class="container">
     <div class="row">
         <div id="valid-word-container" class="container">
-            <p><strong>Valid guessed words:</strong></p>
+            <div>
+                <p><strong>Valid guessed words:</strong></p>
+            </div>
+            <div id="valid-words-div">
+            </div>
         </div>
         <div id="inner-button-container" class="container">
             {% for tile in game_state.game_tiles %}

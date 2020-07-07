@@ -26,9 +26,14 @@
 
 #valid-word-container {
     width: 250px;
+    height: 500px;
     margin-right: 0;
 }
 
 #valid-word-container p {
     margin-bottom: 0;
+}
+
+#valid-words-div {
+    overflow-y: auto;
 }

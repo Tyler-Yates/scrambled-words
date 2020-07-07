@@ -15,7 +15,7 @@ $(document).ready(function () {
             const paragraphNode = document.createElement("P");
             const textNode = document.createTextNode(data.guess.toUpperCase());
             paragraphNode.appendChild(textNode);
-            document.getElementById("valid-word-container").appendChild(paragraphNode);
+            document.getElementById("valid-words-div").appendChild(paragraphNode);
         }
     });
 
