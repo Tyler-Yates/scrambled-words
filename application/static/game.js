@@ -30,16 +30,31 @@ $(document).ready(function () {
 
 // Function that sets up the logic for emitting a socket message when clicking on a button.
 function add_button_event_listeners(socket, roomName) {
-    // Add event listener to guess button
-    document.getElementById("guessWordSubmit").addEventListener('click', (event) => {
-        const guess = document.getElementById("guessWordInput").value;
+    // Add event listener to guess buttons and input text box
+    const guessWordSubmitElement = document.getElementById("guessWordSubmit");
+    const guessWordInputElement = document.getElementById("guessWordInput");
+
+    guessWordSubmitElement.addEventListener('click', (event) => {
+        const guessWordInputElement = document.getElementById("guessWordInput");
+        const guess = guessWordInputElement.value;
         socket.emit('guess', {'room': roomName, 'guess': guess});
+        guessWordInputElement.value = "";
+        guessWordInputElement.focus();
+    });
+
+    guessWordInputElement.addEventListener("keyup", event => {
+        if (event.key === "Enter") {
+            guessWordSubmitElement.click();
+        }
     });
 
     // Add event listener to new game button
     document.getElementById("new-game-button").addEventListener('click', (event) => {
         confirmAndStartNewGame(socket, roomName);
     });
+
+    // Give the input text box default focus once the page loads.
+    guessWordInputElement.focus();
 }
 
 function confirmAndStartNewGame(socket, roomName) {
