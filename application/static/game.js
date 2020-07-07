@@ -8,14 +8,8 @@ $(document).ready(function () {
         socket.emit('join', {'room': roomName});
     });
 
-    socket.on('game_update', function (data) {
+    socket.on('guess_reply', function (data) {
         console.log(data);
-
-        update_team_information(data.game_state);
-
-        data.game_state.tiles.forEach(function (item, index) {
-            update_tile(item.word, item.hidden_value, item.guessed);
-        });
     });
 
     socket.on('reload_page', function (data) {
@@ -29,6 +23,11 @@ $(document).ready(function () {
 
 // Function that sets up the logic for emitting a socket message when clicking on a button.
 function add_button_event_listeners(socket, roomName) {
+    // Add event listener to guess button
+    document.getElementById("guessWordSubmit").addEventListener('click', (event) => {
+        const guess = document.getElementById("guessWordInput").value;
+        socket.emit('guess', {'room': roomName, 'guess': guess});
+    });
 
     // Add event listener to new game button
     document.getElementById("new-game-button").addEventListener('click', (event) => {
