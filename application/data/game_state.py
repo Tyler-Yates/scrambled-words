@@ -65,7 +65,7 @@ class GameState:
             # Find all locations where the current character is on the board.
             character_locations = []
             for i in range(0, len(self.game_tiles)):
-                if self.game_tiles[i] == character:
+                if self.game_tiles[i].lower() == character.lower():
                     character_locations.append(i)
 
             if possible_paths is None:
@@ -124,5 +124,5 @@ class GameState:
     def _generate_tiles() -> List[str]:
         tiles = []
         for i in range(0, TOTAL_TILES):
-            tiles[i] = random.choice(string.ascii_lowercase)
+            tiles.append(random.choice(string.ascii_uppercase))
         return tiles
