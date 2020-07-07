@@ -1,7 +1,7 @@
 from typing import List
 
 from application import WordManager
-from data.game_state import GameState
+from application.data.game_state import GameState
 from tests.data.test_word_manager import TestWordManager
 
 
