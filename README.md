@@ -14,8 +14,12 @@ cd ssl
 openssl req -nodes -new -x509 -keyout server.key -out server.crt \
     -subj "/C=GB/ST=London/L=London/O=Local/OU=Local/CN=127.0.0.1"
 ```
+The `ssl` folder is ignored by `git` so you should not need to worry about committing the
+generated key and certificate.
 
 After generating the key and certificate, you are ready to run the application.
+
+## Running the application
 Your run configuration should look like the following:
 ```
 venv/bin/gunicorn \
@@ -26,3 +30,7 @@ venv/bin/gunicorn \
     "application:create_flask_app()"
 ```
 Make sure to run the application with the working directory set at the root of the repo.
+
+The webapp should be accessible at [https://127.0.0.1:8000]()
+
+You will most likely need to tell your browser to accept the self-signed certificate.
