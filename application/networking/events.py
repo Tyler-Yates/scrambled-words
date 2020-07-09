@@ -16,27 +16,28 @@ def joined_event(message):
     join_room(room)
 
     session_id = flask.request.sid
-    ip_address = flask.request.remote_addr
+    player_id = _get_player_id()
 
     game_state = _get_game_manager().get_game_state(room)
     if game_state:
-        LOG.info(f"User {ip_address} has joined room {room}")
-        emit("game_state", game_state.get_game_state(player_id=ip_address), to=session_id)
+        LOG.info(f"User {player_id} has joined room {room}")
+        # Only send the game_state update to the SocketIO session ID as the other players do not need to know
+        emit("game_state", game_state.get_game_state(player_id=player_id), to=session_id)
     else:
-        LOG.warning(f"User {ip_address} has joined invalid room {room}")
+        LOG.warning(f"User {player_id} has joined invalid room {room}")
 
 
 @socketio.on("guess")
 def guess_word_event(message):
     session_id = flask.request.sid
-    ip_address = flask.request.remote_addr
-    LOG.info(f"Received guess from {ip_address}: {message}")
+    player_id = _get_player_id()
+    LOG.info(f"Received guess from {player_id}: {message}")
 
     room = message["room"]
     guessed_word = message["guess"]
 
     game_state = _get_game_manager().get_game_state(room)
-    reply = game_state.guess_word(ip_address, guessed_word)
+    reply = game_state.guess_word(player_id, guessed_word)
 
     emit("guess_reply", {"valid": reply, "guess": guessed_word}, to=session_id)
 
@@ -54,6 +55,10 @@ def new_game_event(message):
         game_state = _get_game_manager().create_game_for_name(room)
 
     emit("game_state", game_state.get_game_state(), room=room)
+
+
+def _get_player_id() -> str:
+    return flask.request.remote_addr
 
 
 def _get_game_manager() -> GameManager:
