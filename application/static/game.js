@@ -56,8 +56,14 @@ $(document).ready(function () {
     socket.on("game_over", function (data) {
         console.log(data);
 
+        let totalScore = 0;
+
         data.scored_words.forEach(function (item, index) {
+            const score = get_score_for_word(item);
+            totalScore += score;
+
             const validGuessElement = document.getElementById(`valid-guess-${item}`);
+            validGuessElement.innerHTML = `${item.toUpperCase()} +${score}`;
             validGuessElement.classList.add("scored-word");
         });
 
@@ -65,6 +71,9 @@ $(document).ready(function () {
             const validGuessElement = document.getElementById(`valid-guess-${item}`);
             validGuessElement.classList.add("unscored-word");
         });
+
+        const scoreDiv = document.getElementById("score-div");
+        scoreDiv.innerHTML = String(totalScore);
     });
 
     // Add event listeners to the buttons
@@ -100,6 +109,20 @@ $(document).ready(function () {
         document.getElementById("time-remaining-div").innerHTML = `${minutesRemaining}:${secondsRemaining}`;
     }, 1000);
 });
+
+function get_score_for_word(word) {
+    if(word.length <= 4) {
+        return 1;
+    } else if (word.length === 5) {
+        return 2;
+    } else if (word.length === 6) {
+        return 3;
+    } else if (word.length === 7) {
+        return 5;
+    } else if (word.length >= 8) {
+        return 8;
+    }
+}
 
 function end_game() {
     const guessButtonElement = document.getElementById("guessWordSubmit");

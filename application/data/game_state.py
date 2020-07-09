@@ -32,6 +32,9 @@ class GameState:
         self.word_counter: Counter = Counter()
         self.game_running = True
 
+        # TODO save scores server-side
+        self.scores: Dict[str, int] = {}
+
         self.new_board(tiles)
 
     def new_board(self, tiles: List[str] = None):

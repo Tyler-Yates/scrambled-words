@@ -30,7 +30,7 @@
     margin-right: 0;
 }
 
-#valid-word-container p {
+.side-bar p {
     margin-bottom: 0;
 }
 
@@ -48,6 +48,10 @@
 }
 
 #time-remaining-div {
+    font-size: 200%;
+}
+
+#score-div {
     font-size: 200%;
 }
 
