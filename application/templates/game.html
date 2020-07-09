@@ -14,9 +14,11 @@
     <h1>Game: <span id="game-name">{{ game_state.game_name }}</span></h1>
 </div>
 
-<div class="row">
-    <div class="col">
-        <hr>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <hr>
+        </div>
     </div>
 </div>
 
@@ -56,11 +58,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <label for="guessWordInput">Guess Word:</label>
-            <input type="text" class="form-control" id="guessWordInput" placeholder="Guess">
+        <div id="guess-div" class="col">
+            <div class="form-group">
+                <label for="guessWordInput">Guess Word:</label>
+                <input type="text" class="form-control" id="guessWordInput" placeholder="Guess">
+            </div>
+            <button id="guessWordSubmit" class="btn btn-primary">Submit</button>
         </div>
-        <button id="guessWordSubmit" class="btn btn-primary">Submit</button>
     </div>
     <div class="row">
         <div class="col text-right">

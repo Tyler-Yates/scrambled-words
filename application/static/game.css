@@ -37,3 +37,7 @@
 #valid-words-div {
     overflow-y: auto;
 }
+
+#guess-div {
+    max-width: 25%;
+}
