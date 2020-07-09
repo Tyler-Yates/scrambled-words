@@ -27,6 +27,8 @@ class GameState:
         self.game_tiles: List[str] = []
         self.expire_time: int = None
         self.valid_guesses: Dict[str, Set[str]] = {}
+        self.word_counter: Counter = Counter()
+        self.game_running = True
 
         self.new_board(tiles)
 
@@ -36,12 +38,20 @@ class GameState:
         else:
             self.game_tiles = GameState._generate_tiles()
 
+        self.word_counter = Counter()
+
         self.expire_time = get_time_millis() + (TOTAL_TIME_SECONDS * 1000)
+        end_game_timer = Timer(TOTAL_TIME_SECONDS, self.end_game)
+        end_game_timer.start()
 
         # Dictionary from player ID to Set of valid guesses
         self.valid_guesses = {}
 
         self._log_info("Created new board")
+
+    def end_game(self):
+        self.game_running = False
+        self._log_info("Game ended")
 
     def get_game_state(self, player_id: str = None):
         game_state = {"expire_time": self.expire_time, "tiles": self.game_tiles}
@@ -68,14 +78,24 @@ class GameState:
         # Ensure the guessed word is all lower-case to match with the tiles
         guessed_word = guessed_word.lower()
 
+        # Ensure players are not able to guess after the game has expired
+        if not self.game_running:
+            self._log_info(f"{player_id} guess word '{guessed_word}' was guessed after game ended")
+            return False
+
+        # Ensure players cannot guess the same word multiple times
         if guessed_word in self.valid_guesses.get(player_id, set()):
             self._log_info(f"{player_id} guess word '{guessed_word}' has already been guessed successfully by player")
             return False
 
+        # Check if the word is recognized and on the board
         if self.word_manager.is_word(guessed_word):
             word_is_on_board = self._word_is_on_board(guessed_word)
             if word_is_on_board:
                 self._log_info(f"{player_id} guess word '{guessed_word}' is a valid word")
+
+                # Increase the word counter to make it easier to calculate point at the end of the game
+                self.word_counter[guessed_word] += 1
 
                 if player_id in self.valid_guesses:
                     self.valid_guesses.get(player_id).add(guessed_word)
@@ -90,6 +110,18 @@ class GameState:
         else:
             self._log_info(f"{player_id} guess word '{guessed_word}' is not a recognized word")
             return False
+
+    def get_score_state(self, player_id: str) -> Dict[str, object]:
+        scored_words = []
+        unscored_words = []
+        valid_guesses = self.valid_guesses.get(player_id, set())
+        for valid_guess in valid_guesses:
+            if self.word_counter.get(valid_guess) == 1:
+                scored_words.append(valid_guess)
+            else:
+                unscored_words.append(valid_guess)
+
+        return {"scored_words": scored_words, "unscored_words": unscored_words}
 
     def _word_is_on_board(self, guessed_word: str) -> bool:
         possible_paths: List[List[int]] = None

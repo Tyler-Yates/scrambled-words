@@ -57,6 +57,19 @@ def new_game_event(message):
     emit("game_state", game_state.get_game_state(), room=room)
 
 
+@socketio.on("timer_expired")
+def timer_expired_event(message):
+    LOG.debug(f"Received timer_expired: {message}")
+
+    session_id = flask.request.sid
+    player_id = _get_player_id()
+    room = message["room"]
+
+    game_state = _get_game_manager().get_game_state(room)
+
+    emit("game_over", game_state.get_score_state(player_id), to=session_id)
+
+
 def _get_player_id() -> str:
     return flask.request.remote_addr
 

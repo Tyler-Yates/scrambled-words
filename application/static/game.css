@@ -50,3 +50,11 @@
 #time-remaining-div {
     font-size: 200%;
 }
+
+.scored-word {
+    color: green;
+}
+
+.unscored-word {
+    color: red;
+}

@@ -53,6 +53,20 @@ $(document).ready(function () {
         newGameButton.setAttributeNode(disabledAttribute);
     });
 
+    socket.on("game_over", function (data) {
+        console.log(data);
+
+        data.scored_words.forEach(function (item, index) {
+            const validGuessElement = document.getElementById(`valid-guess-${item}`);
+            validGuessElement.classList.add("scored-word");
+        });
+
+        data.unscored_words.forEach(function (item, index) {
+            const validGuessElement = document.getElementById(`valid-guess-${item}`);
+            validGuessElement.classList.add("unscored-word");
+        });
+    });
+
     // Add event listeners to the buttons
     add_button_event_listeners(socket, roomName);
 
@@ -74,7 +88,7 @@ $(document).ready(function () {
         } else {
             minutesRemaining = 0;
             secondsRemaining = 0;
-
+            socket.emit('timer_expired', {'room': roomName});
             // Set variables to indicate game is over
             expireTimeMillis = null;
             end_game();
@@ -101,6 +115,7 @@ function end_game() {
 
 function add_valid_guess(valid_guess) {
     const paragraphNode = document.createElement("P");
+    paragraphNode.id = `valid-guess-${valid_guess}`;
     const textNode = document.createTextNode(valid_guess.toUpperCase());
     paragraphNode.appendChild(textNode);
     document.getElementById("valid-words-div").appendChild(paragraphNode);
