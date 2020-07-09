@@ -1,3 +1,5 @@
+let expireTimeMillis = null;
+
 $(document).ready(function () {
     const socket = io.connect('https://' + document.domain + ':' + location.port);
 
@@ -22,18 +24,56 @@ $(document).ready(function () {
         window.location.reload(true);
     });
 
-    socket.on("valid_guesses_refresh", function (data) {
+    socket.on("game_state", function (data) {
         console.log(data);
 
+        // Update tiles
+        data.tiles.forEach(function (item, index) {
+            const tileElement = document.getElementById(`tile-${index}`);
+            tileElement.innerHTML = item;
+        });
+
+        // Update countdown
+        expireTimeMillis = data.expire_time;
+
+        // Update player's list of valid guesses
         const validWordsDiv = document.getElementById("valid-words-div");
         validWordsDiv.innerHTML = "";
-
-        data.guesses.forEach(function (item, index) {
+        data.player_guesses.forEach(function (item, index) {
             add_valid_guess(item);
         });
     });
 
     add_button_event_listeners(socket, roomName);
+
+    window.setInterval(function () {
+
+        if (expireTimeMillis == null) {
+            return;
+        }
+
+        // Get today's date and time
+        const now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        const timeRemaining = expireTimeMillis - now;
+
+        let minutesRemaining;
+        let secondsRemaining;
+        if (timeRemaining > 0) {
+            minutesRemaining = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            secondsRemaining = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        } else {
+            minutesRemaining = 0;
+            secondsRemaining = 0;
+        }
+
+        minutesRemaining = String(minutesRemaining).padStart(2, '0');
+        secondsRemaining = String(secondsRemaining).padStart(2, '0');
+
+        // Display the result in the element with id="demo"
+        document.getElementById("time-remaining-div").innerHTML = `${minutesRemaining}:${secondsRemaining}`;
+    }, 1000);
 });
 
 function add_valid_guess(valid_guess) {

@@ -4,8 +4,10 @@ import string
 from typing import List, Set, Dict
 
 from application.data.word_manager import WordManager
+from application.util.time_util import get_time_millis
 
 TOTAL_TILES = 25
+TOTAL_TIME_SECONDS = 3 * 60
 
 LOG = logging.getLogger("GameState")
 
@@ -26,10 +28,18 @@ class GameState:
         else:
             self.game_tiles = GameState._generate_tiles()
 
+        self.expire_time = get_time_millis() + (TOTAL_TIME_SECONDS * 1000)
+
         # Dictionary from player ID to Set of valid guesses
         self.valid_guesses: Dict[str, Set[str]] = {}
 
         self._log_info("Created new game")
+
+    def get_game_state(self, player_id: str = None):
+        game_state = {"expire_time": self.expire_time, "tiles": self.game_tiles}
+        if player_id:
+            game_state["player_guesses"] = self.valid_guesses.get(player_id, [])
+        return game_state
 
     def guess_word(self, player_id: str, guessed_word: str) -> bool:
         """
@@ -69,18 +79,6 @@ class GameState:
         else:
             self._log_info(f"{player_id} guess word '{guessed_word}' is not a recognized word")
             return False
-
-    def get_player_valid_guesses(self, player_id: str) -> Set[str]:
-        """
-        Returns the valid guesses that have already been made by the given player.
-
-        Args:
-            player_id: the given player
-
-        Returns:
-            the set of already valid guesses or empty set if player is not found
-        """
-        return self.valid_guesses.get(player_id, set())
 
     def _word_is_on_board(self, guessed_word: str) -> bool:
         possible_paths: List[List[int]] = None

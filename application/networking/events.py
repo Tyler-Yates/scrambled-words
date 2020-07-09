@@ -21,7 +21,7 @@ def joined_event(message):
     game_state = _get_game_manager().get_game_state(room)
     if game_state:
         LOG.info(f"User {ip_address} has joined room {room}")
-        emit("valid_guesses_refresh", {"guesses": list(game_state.get_player_valid_guesses(ip_address))}, to=session_id)
+        emit("game_state", game_state.get_game_state(player_id=ip_address), to=session_id)
     else:
         LOG.warning(f"User {ip_address} has joined invalid room {room}")
 

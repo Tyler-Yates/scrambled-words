@@ -41,3 +41,12 @@
 #guess-div {
     max-width: 25%;
 }
+
+#timer-container {
+    width: 200px;
+    margin-left: 0;
+}
+
+#time-remaining-div {
+    font-size: 200%;
+}

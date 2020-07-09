@@ -41,12 +41,19 @@
                 {% endif %}
 
                 <div class="col">
-                    <button id="button-{{ tile }}" class="btn btn-tile btn-light btn-block rounded-0" disabled>
+                    <button id="tile-{{ loop.index0 }}" class="btn btn-tile btn-light btn-block rounded-0" disabled>
                         {{ tile }}
                     </button>
                 </div>
             {% endfor %}
             </div>
+    </div>
+    <div id="timer-container" class="container">
+        <div>
+            <p><strong>Time remaining:</strong></p>
+        </div>
+        <div id="time-remaining-div">
+        </div>
     </div>
 </div>
 </div>
