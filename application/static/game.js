@@ -18,12 +18,6 @@ $(document).ready(function () {
         }
     });
 
-    socket.on('reload_page', function (data) {
-        console.log(data);
-
-        window.location.reload(true);
-    });
-
     socket.on("game_state", function (data) {
         console.log(data);
 
@@ -42,20 +36,34 @@ $(document).ready(function () {
         data.player_guesses.forEach(function (item, index) {
             add_valid_guess(item);
         });
+
+        // Ensure buttons and input are in the right state
+        const guessButtonElement = document.getElementById("guessWordSubmit");
+        if (guessButtonElement.hasAttribute("disabled")) {
+            guessButtonElement.removeAttribute("disabled");
+        }
+
+        const guessWordInputElement = document.getElementById("guessWordInput");
+        guessWordInputElement.value = "";
+        guessWordInputElement.focus();
+
+        const newGameButton = document.getElementById("new-game-button");
+        newGameButton.style.display = "none";
+        const disabledAttribute = document.createAttribute("disabled");
+        newGameButton.setAttributeNode(disabledAttribute);
     });
 
+    // Add event listeners to the buttons
     add_button_event_listeners(socket, roomName);
 
+    // Update the remaining time counter each second
     window.setInterval(function () {
-
+        // Don't waste calculations if the game is over
         if (expireTimeMillis == null) {
             return;
         }
 
-        // Get today's date and time
         const now = new Date().getTime();
-
-        // Find the distance between now and the count down date
         const timeRemaining = expireTimeMillis - now;
 
         let minutesRemaining;
@@ -66,15 +74,30 @@ $(document).ready(function () {
         } else {
             minutesRemaining = 0;
             secondsRemaining = 0;
+
+            // Set variables to indicate game is over
+            expireTimeMillis = null;
+            end_game();
         }
 
         minutesRemaining = String(minutesRemaining).padStart(2, '0');
         secondsRemaining = String(secondsRemaining).padStart(2, '0');
 
-        // Display the result in the element with id="demo"
         document.getElementById("time-remaining-div").innerHTML = `${minutesRemaining}:${secondsRemaining}`;
     }, 1000);
 });
+
+function end_game() {
+    const guessButtonElement = document.getElementById("guessWordSubmit");
+    const disabledAttribute = document.createAttribute("disabled");
+    guessButtonElement.setAttributeNode(disabledAttribute);
+
+    const newGameButton = document.getElementById("new-game-button");
+    newGameButton.style.display = "";
+    if (newGameButton.hasAttribute("disabled")) {
+        newGameButton.removeAttribute("disabled");
+    }
+}
 
 function add_valid_guess(valid_guess) {
     const paragraphNode = document.createElement("P");

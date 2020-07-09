@@ -46,9 +46,14 @@ def new_game_event(message):
     LOG.debug(f"Received new_game: {message}")
 
     room = message["room"]
-    _get_game_manager().create_game_for_name(room)
 
-    emit("reload_page", {}, room=room)
+    game_state = _get_game_manager().get_game_state(room)
+    if game_state:
+        game_state.new_board()
+    else:
+        game_state = _get_game_manager().create_game_for_name(room)
+
+    emit("game_state", game_state.get_game_state(), room=room)
 
 
 def _get_game_manager() -> GameManager:

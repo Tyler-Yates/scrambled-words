@@ -23,6 +23,14 @@ class GameState:
         """
         self.game_name = game_name
         self.word_manager = word_manager
+
+        self.game_tiles: List[str] = []
+        self.expire_time: int = None
+        self.valid_guesses: Dict[str, Set[str]] = {}
+
+        self.new_board(tiles)
+
+    def new_board(self, tiles: List[str] = None):
         if tiles:
             self.game_tiles = tiles
         else:
@@ -31,14 +39,17 @@ class GameState:
         self.expire_time = get_time_millis() + (TOTAL_TIME_SECONDS * 1000)
 
         # Dictionary from player ID to Set of valid guesses
-        self.valid_guesses: Dict[str, Set[str]] = {}
+        self.valid_guesses = {}
 
-        self._log_info("Created new game")
+        self._log_info("Created new board")
 
     def get_game_state(self, player_id: str = None):
         game_state = {"expire_time": self.expire_time, "tiles": self.game_tiles}
         if player_id:
             game_state["player_guesses"] = self.valid_guesses.get(player_id, [])
+        else:
+            # No player_id indicates a reset of the game so send empty guesses list
+            game_state["player_guesses"] = []
         return game_state
 
     def guess_word(self, player_id: str, guessed_word: str) -> bool:
