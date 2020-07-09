@@ -1,6 +1,8 @@
 import logging
 import random
 import string
+from collections import Counter
+from threading import Timer
 from typing import List, Set, Dict
 
 from application.data.word_manager import WordManager
@@ -39,6 +41,7 @@ class GameState:
             self.game_tiles = GameState._generate_tiles()
 
         self.word_counter = Counter()
+        self.game_running = True
 
         self.expire_time = get_time_millis() + (TOTAL_TIME_SECONDS * 1000)
         end_game_timer = Timer(TOTAL_TIME_SECONDS, self.end_game)
