@@ -138,7 +138,7 @@ function end_game() {
 
 function add_valid_guess(valid_guess) {
     const paragraphNode = document.createElement("P");
-    paragraphNode.id = `valid-guess-${valid_guess}`;
+    paragraphNode.id = `valid-guess-${valid_guess.toLowerCase()}`;
     const textNode = document.createTextNode(valid_guess.toUpperCase());
     paragraphNode.appendChild(textNode);
     document.getElementById("valid-words-div").appendChild(paragraphNode);
