@@ -61,7 +61,8 @@ class GameState:
     def get_game_state(self, player_id: str = None):
         game_state = {"expire_time": self.expire_time, "tiles": self.game_tiles}
         if player_id:
-            game_state["player_guesses"] = self.valid_guesses.get(player_id, [])
+            # Set is not serializable so turn it into a set
+            game_state["player_guesses"] = list(self.valid_guesses.get(player_id, {}))
         else:
             # No player_id indicates a reset of the game so send empty guesses list
             game_state["player_guesses"] = []
