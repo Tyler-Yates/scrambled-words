@@ -49,6 +49,7 @@ class GameManager:
         Returns:
             the game state if one exists
         """
+        game_name = game_name.upper()
         return self.games.get(game_name, None)
 
     @staticmethod
