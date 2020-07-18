@@ -30,6 +30,7 @@ class GameState:
         self.valid_guesses: Dict[str, Set[str]] = {}
         self.word_counter: Counter = Counter()
         self.game_running = True
+        self.end_game_timer: Timer = None
 
         # TODO save scores server-side
         self.scores: Dict[str, int] = {}
@@ -45,9 +46,14 @@ class GameState:
         self.word_counter = Counter()
         self.game_running = True
 
+        # Ensure any existing timer is cancelled
+        if self.end_game_timer:
+            self.end_game_timer.cancel()
+
+        # Set up the new timer
         self.expire_time = get_time_millis() + (TOTAL_TIME_SECONDS * 1000)
-        end_game_timer = Timer(TOTAL_TIME_SECONDS, self.end_game)
-        end_game_timer.start()
+        self.end_game_timer = Timer(TOTAL_TIME_SECONDS, self.end_game)
+        self.end_game_timer.start()
 
         # Dictionary from player ID to Set of valid guesses
         self.valid_guesses = {}

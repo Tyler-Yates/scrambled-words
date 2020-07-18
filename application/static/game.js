@@ -46,11 +46,6 @@ $(document).ready(function () {
         const guessWordInputElement = document.getElementById("guessWordInput");
         guessWordInputElement.value = "";
         guessWordInputElement.focus();
-
-        const newGameButton = document.getElementById("new-game-button");
-        newGameButton.style.display = "none";
-        const disabledAttribute = document.createAttribute("disabled");
-        newGameButton.setAttributeNode(disabledAttribute);
     });
 
     socket.on("game_over", function (data) {
@@ -128,12 +123,6 @@ function end_game() {
     const guessButtonElement = document.getElementById("guessWordSubmit");
     const disabledAttribute = document.createAttribute("disabled");
     guessButtonElement.setAttributeNode(disabledAttribute);
-
-    const newGameButton = document.getElementById("new-game-button");
-    newGameButton.style.display = "";
-    if (newGameButton.hasAttribute("disabled")) {
-        newGameButton.removeAttribute("disabled");
-    }
 }
 
 function add_valid_guess(valid_guess, path) {
@@ -193,6 +182,7 @@ function add_button_event_listeners(socket, roomName) {
 function confirmAndStartNewGame(socket, roomName) {
     const confirmation = confirm("Do you want to start a new game? The current board will be cleared.");
     if (confirmation === true) {
+        clearPath();
         console.info("Starting new game...");
         socket.emit('new_game', {'room': roomName});
     }
