@@ -35,6 +35,7 @@
 }
 
 #valid-words-div {
+    height: 95%;
     overflow-y: auto;
 }
 

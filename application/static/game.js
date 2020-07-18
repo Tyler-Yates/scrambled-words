@@ -141,7 +141,7 @@ function add_valid_guess(valid_guess) {
     paragraphNode.id = `valid-guess-${valid_guess.toLowerCase()}`;
     const textNode = document.createTextNode(valid_guess.toUpperCase());
     paragraphNode.appendChild(textNode);
-    document.getElementById("valid-words-div").appendChild(paragraphNode);
+    document.getElementById("valid-words-div").prepend(paragraphNode);
 }
 
 // Function that sets up the logic for emitting a socket message when clicking on a button.
