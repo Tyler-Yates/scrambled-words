@@ -199,10 +199,60 @@ class GameState:
     def _generate_tiles() -> List[str]:
         tiles = []
         for i in range(0, TOTAL_TILES):
-            tiles.append(random.choice(
-                [
-                    'a', 'a', 'a', 'a', 'b', 'c', 'd', 'd', 'e', 'e', 'e', 'e', 'e', 'f', 'g', 'h', 'h', 'h', 'i', 'i', 'i', 'i', 'j', 'k', 'l', 'l',
-                    'm', 'n', 'o', 'o', 'o', 'o', 'q', 'r', 'r', 's', 's', 's', 's', 't', 't', 't', 'u', 'u', 'u', 'v', 'w', 'x', 'y', 'z'
-                ]
-            ))
+            tiles.append(
+                random.choice(
+                    [
+                        "a",
+                        "a",
+                        "a",
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "d",
+                        "e",
+                        "e",
+                        "e",
+                        "e",
+                        "e",
+                        "f",
+                        "g",
+                        "h",
+                        "h",
+                        "h",
+                        "i",
+                        "i",
+                        "i",
+                        "i",
+                        "j",
+                        "k",
+                        "l",
+                        "l",
+                        "m",
+                        "n",
+                        "o",
+                        "o",
+                        "o",
+                        "o",
+                        "q",
+                        "r",
+                        "r",
+                        "s",
+                        "s",
+                        "s",
+                        "s",
+                        "t",
+                        "t",
+                        "t",
+                        "u",
+                        "u",
+                        "u",
+                        "v",
+                        "w",
+                        "x",
+                        "y",
+                        "z",
+                    ]
+                )
+            )
         return tiles
