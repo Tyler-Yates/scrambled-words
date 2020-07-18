@@ -37,9 +37,9 @@ def guess_word_event(message):
     guessed_word = message["guess"]
 
     game_state = _get_game_manager().get_game_state(room)
-    reply = game_state.guess_word(player_id, guessed_word)
+    word_path = game_state.guess_word(player_id, guessed_word)
 
-    emit("guess_reply", {"valid": reply, "guess": guessed_word}, to=session_id)
+    emit("guess_reply", {"valid": word_path is not None, "guess": guessed_word, "path": word_path}, to=session_id)
 
 
 @socketio.on("new_game")

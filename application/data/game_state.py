@@ -2,7 +2,7 @@ import logging
 import random
 from collections import Counter
 from threading import Timer
-from typing import List, Set, Dict
+from typing import List, Set, Dict, Optional
 
 from application.data.word_manager import WordManager
 from application.util.time_util import get_time_millis
@@ -68,7 +68,7 @@ class GameState:
             game_state["player_guesses"] = []
         return game_state
 
-    def guess_word(self, player_id: str, guessed_word: str) -> bool:
+    def guess_word(self, player_id: str, guessed_word: str) -> Optional[List[int]]:
         """
         Updates the game state to reflect the guessed word.
         If the guess is not correct, the current team's turn is ended.
@@ -87,12 +87,12 @@ class GameState:
         # Ensure players are not able to guess after the game has expired
         if not self.game_running:
             self._log_info(f"{player_id} guess word '{guessed_word}' was guessed after game ended")
-            return False
+            return None
 
         # Ensure players cannot guess the same word multiple times
         if guessed_word in self.valid_guesses.get(player_id, set()):
             self._log_info(f"{player_id} guess word '{guessed_word}' has already been guessed successfully by player")
-            return False
+            return None
 
         # Check if the word is recognized and on the board
         if self.word_manager.is_word(guessed_word):
@@ -115,7 +115,7 @@ class GameState:
             return word_is_on_board
         else:
             self._log_info(f"{player_id} guess word '{guessed_word}' is not a recognized word")
-            return False
+            return None
 
     def get_score_state(self, player_id: str) -> Dict[str, object]:
         scored_words = []
@@ -129,7 +129,7 @@ class GameState:
 
         return {"scored_words": scored_words, "unscored_words": unscored_words}
 
-    def _word_is_on_board(self, guessed_word: str) -> bool:
+    def _word_is_on_board(self, guessed_word: str) -> Optional[List[int]]:
         possible_paths: List[List[int]] = None
 
         # Iterate through each character of the guessed word
@@ -169,7 +169,7 @@ class GameState:
                 # Swap in the new possible paths to discard paths that are no longer possible.
                 possible_paths = new_possible_paths
         print(f"Possible paths for '{guessed_word}': {possible_paths}")
-        return len(possible_paths) > 0
+        return None if len(possible_paths) == 0 else possible_paths[0]
 
     def _log_info(self, log_message: str):
         LOG.info("[%s] %s", self.game_name, log_message)

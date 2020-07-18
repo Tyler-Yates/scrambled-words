@@ -14,7 +14,7 @@ $(document).ready(function () {
         console.log(data);
 
         if (data.valid) {
-            add_valid_guess(data.guess);
+            add_valid_guess(data.guess, data.path);
         }
     });
 
@@ -111,7 +111,7 @@ $(document).ready(function () {
 });
 
 function get_score_for_word(word) {
-    if(word.length <= 4) {
+    if (word.length <= 4) {
         return 1;
     } else if (word.length === 5) {
         return 2;
@@ -136,12 +136,28 @@ function end_game() {
     }
 }
 
-function add_valid_guess(valid_guess) {
+function add_valid_guess(valid_guess, path) {
     const paragraphNode = document.createElement("P");
     paragraphNode.id = `valid-guess-${valid_guess.toLowerCase()}`;
     const textNode = document.createTextNode(valid_guess.toUpperCase());
     paragraphNode.appendChild(textNode);
     document.getElementById("valid-words-div").prepend(paragraphNode);
+
+    path.forEach(function (item, index) {
+        const tileElement = document.getElementById(`tile-${item}`);
+        tileElement.classList.add("path-tile");
+    });
+}
+
+function clearPath() {
+    const buttonDiv = document.getElementById("inner-button-container");
+    const pathTiles = buttonDiv.getElementsByClassName("path-tile");
+
+    // getElementsByClassName returns a "live" collection so removing the class will change the list
+    for (let i = pathTiles.length - 1; i >= 0; i--) {
+        const item = pathTiles[i];
+        item.classList.remove("path-tile");
+    }
 }
 
 // Function that sets up the logic for emitting a socket message when clicking on a button.
@@ -151,6 +167,7 @@ function add_button_event_listeners(socket, roomName) {
     const guessWordInputElement = document.getElementById("guessWordInput");
 
     guessWordSubmitElement.addEventListener('click', (event) => {
+        clearPath();
         const guessWordInputElement = document.getElementById("guessWordInput");
         const guess = guessWordInputElement.value;
         socket.emit('guess', {'room': roomName, 'guess': guess});

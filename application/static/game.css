@@ -63,3 +63,7 @@
 .unscored-word {
     color: red;
 }
+
+.path-tile {
+    background-color: lightgreen !important;
+}

@@ -21,35 +21,35 @@ class TestGameState:
         self.game_state = GameState("test", word_manager, tiles)
 
     def test_guess_word_valid(self):
-        assert self.game_state.guess_word("player", "set") is True
-        assert self.game_state.guess_word("player", "states") is True
+        assert self.game_state.guess_word("player", "set") is not None
+        assert self.game_state.guess_word("player", "states") is not None
 
     def test_guess_word_invalid(self):
-        assert self.game_state.guess_word("player", "armory") is False
-        assert self.game_state.guess_word("player", "test") is False
+        assert self.game_state.guess_word("player", "armory") is None
+        assert self.game_state.guess_word("player", "test") is None
 
     def test_guess_word_unrecognized(self):
         self.game_state.word_manager = WordManager({"test"})
-        assert self.game_state.guess_word("player", "word") is False
+        assert self.game_state.guess_word("player", "word") is None
 
     def test_word_is_on_board_valid(self):
-        assert self.game_state._word_is_on_board("set") is True
-        assert self.game_state._word_is_on_board("sat") is True
-        assert self.game_state._word_is_on_board("state") is True
-        assert self.game_state._word_is_on_board("states") is True
-        assert self.game_state._word_is_on_board("rest") is True
-        assert self.game_state._word_is_on_board("saber") is True
-        assert self.game_state._word_is_on_board("stab") is True
-        assert self.game_state._word_is_on_board("best") is True
-        assert self.game_state._word_is_on_board("bat") is True
-        assert self.game_state._word_is_on_board("bats") is True
+        assert self.game_state._word_is_on_board("set") is not None
+        assert self.game_state._word_is_on_board("sat") is not None
+        assert self.game_state._word_is_on_board("state") is not None
+        assert self.game_state._word_is_on_board("states") is not None
+        assert self.game_state._word_is_on_board("rest") is not None
+        assert self.game_state._word_is_on_board("saber") is not None
+        assert self.game_state._word_is_on_board("stab") is not None
+        assert self.game_state._word_is_on_board("best") is not None
+        assert self.game_state._word_is_on_board("bat") is not None
+        assert self.game_state._word_is_on_board("bats") is not None
 
     def test_word_is_on_board_invalid(self):
-        assert self.game_state._word_is_on_board("armory") is False
+        assert self.game_state._word_is_on_board("armory") is None
 
     def test_word_is_on_board_invalid_reuse(self):
-        assert self.game_state._word_is_on_board("test") is False
-        assert self.game_state._word_is_on_board("jaba") is False
+        assert self.game_state._word_is_on_board("test") is None
+        assert self.game_state._word_is_on_board("jaba") is None
 
     def test_tiles_are_neighbors_0(self):
         TestGameState._assert_neighbors(0, [1, 5, 6])
