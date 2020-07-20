@@ -22,6 +22,14 @@
     <div id="button_row" class="row h-75">
         <div id="new_game_column" class="col align-self-center text-center">
             <form action="/create_game" enctype="application/x-www-form-urlencoded" method="post">
+                <div class="form-group btn-group">
+                    <label for="scoring-type" class="form-label">Scoring: </label>
+                    <select class="form-control" id="scoring-type" name="scoring-type">
+                        <option>Classic</option>
+                        <option>Distributed (Fractional)</option>
+                        <option>Distributed (Integer)</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-success">Create Game</button>
             </form>
         </div>

@@ -8,7 +8,7 @@ html, body {
     text-transform: uppercase;
 }
 
-.btn, .form-control, .form-label {
+.btn, .form-label {
    font-size: 200%;
 }
 
@@ -18,4 +18,8 @@ html, body {
 
 #join_game_column {
     border-left: #1d2124 solid 1px;
+}
+
+#scoring-type {
+    width: 75%
 }
