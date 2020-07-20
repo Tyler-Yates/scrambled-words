@@ -54,7 +54,7 @@ $(document).ready(function () {
         let totalScore = 0;
 
         data.scored_words.forEach(function (item, index) {
-            const score = get_score_for_word(item);
+            const score = data.scored_word_values[index];
             totalScore += score;
 
             const validGuessElement = document.getElementById(`valid-guess-${item}`);
@@ -104,20 +104,6 @@ $(document).ready(function () {
         document.getElementById("time-remaining-div").innerHTML = `${minutesRemaining}:${secondsRemaining}`;
     }, 1000);
 });
-
-function get_score_for_word(word) {
-    if (word.length <= 4) {
-        return 1;
-    } else if (word.length === 5) {
-        return 2;
-    } else if (word.length === 6) {
-        return 3;
-    } else if (word.length === 7) {
-        return 5;
-    } else if (word.length >= 8) {
-        return 8;
-    }
-}
 
 function end_game() {
     const guessButtonElement = document.getElementById("guessWordSubmit");

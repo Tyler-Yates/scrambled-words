@@ -4,6 +4,8 @@ from collections import Counter
 from threading import Timer
 from typing import List, Set, Dict, Optional
 
+from application.data.scoring import Scoring
+from application.data.scoring_type import ScoringType
 from application.data.word_manager import WordManager
 from application.util.time_util import get_time_millis
 
@@ -18,12 +20,19 @@ class GameState:
     Class representing the state of a game.
     """
 
-    def __init__(self, game_name: str, word_manager: WordManager, tiles: List[str] = None):
+    def __init__(
+        self,
+        game_name: str,
+        word_manager: WordManager,
+        tiles: List[str] = None,
+        scoring_type: ScoringType = ScoringType.CLASSIC,
+    ):
         """
         Generates a new game state.
         """
         self.game_name = game_name
         self.word_manager = word_manager
+        self.scoring_type = scoring_type
 
         self.game_tiles: List[str] = []
         self.expire_time: int = None
@@ -124,16 +133,35 @@ class GameState:
             return None
 
     def get_score_state(self, player_id: str) -> Dict[str, object]:
-        scored_words = []
-        unscored_words = []
-        valid_guesses = self.valid_guesses.get(player_id, set())
-        for valid_guess in valid_guesses:
-            if self.word_counter.get(valid_guess) == 1:
-                scored_words.append(valid_guess)
-            else:
-                unscored_words.append(valid_guess)
+        """
+        Called when the player's game timer ends to get the round's score.
 
-        return {"scored_words": scored_words, "unscored_words": unscored_words}
+        Args:
+            player_id: The ID of the player
+
+        Returns:
+            A dictionary representing the scoring state for the given player for this round
+        """
+        scored_words = []
+        scored_words_values = []
+        unscored_words = []
+
+        valid_guesses = self.valid_guesses.get(player_id, set())
+        for valid_word in valid_guesses:
+            word_value = Scoring.get_word_value(self.scoring_type, valid_word, self.word_counter.get(valid_word))
+
+            # Record the value of any words with a non-zero value
+            if word_value > 0:
+                scored_words.append(valid_word)
+                scored_words_values.append(word_value)
+            else:
+                unscored_words.append(valid_word)
+
+        return {
+            "scored_words": scored_words,
+            "scored_word_values": scored_words_values,
+            "unscored_words": unscored_words,
+        }
 
     def _word_is_on_board(self, guessed_word: str) -> Optional[List[int]]:
         possible_paths: List[List[int]] = None
