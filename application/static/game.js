@@ -59,7 +59,12 @@ $(document).ready(function () {
 
             const validGuessElement = document.getElementById(`valid-guess-${item}`);
             validGuessElement.innerHTML = `${item.toUpperCase()} +${score}`;
-            validGuessElement.classList.add("scored-word");
+
+            if (data.scored_word_guessers[index] === 1) {
+                validGuessElement.classList.add("scored-word");
+            } else {
+                validGuessElement.classList.add("partial-scored-word");
+            }
         });
 
         data.unscored_words.forEach(function (item, index) {

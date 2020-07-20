@@ -60,10 +60,14 @@
     color: green;
 }
 
+.partial-scored-word {
+    color: darkorange;
+}
+
 .unscored-word {
     color: red;
 }
 
 .path-tile {
-    background-color: lightgreen !important;
+    background-color: #ddf6dd !important;
 }

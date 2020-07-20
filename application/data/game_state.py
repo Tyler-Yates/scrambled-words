@@ -144,15 +144,15 @@ class GameState:
         """
         scored_words = []
         scored_words_values = []
+        scored_words_guessers = []
         unscored_words = []
+
+        # Total players is the number of players that have at least one valid guess
+        total_players = len(self.valid_guesses.keys())
 
         valid_guesses = self.valid_guesses.get(player_id, set())
         for valid_word in valid_guesses:
             num_player_who_guessed_word = self.word_counter.get(valid_word)
-
-            # Total players is the number of players that have at least one valid guess
-            total_players = len(self.valid_guesses.keys())
-
             word_value = Scoring.get_word_value(
                 self.scoring_type, valid_word, num_player_who_guessed_word, total_players
             )
@@ -161,13 +161,15 @@ class GameState:
             if word_value > 0:
                 scored_words.append(valid_word)
                 scored_words_values.append(word_value)
+                scored_words_guessers.append(num_player_who_guessed_word)
             else:
                 unscored_words.append(valid_word)
 
         return {
             "scored_words": scored_words,
             "scored_word_values": scored_words_values,
-            "unscored_words": unscored_words,
+            "scored_word_guessers": scored_words_guessers,
+            "unscored_words": unscored_words
         }
 
     def _word_is_on_board(self, guessed_word: str) -> Optional[List[int]]:
