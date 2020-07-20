@@ -148,7 +148,14 @@ class GameState:
 
         valid_guesses = self.valid_guesses.get(player_id, set())
         for valid_word in valid_guesses:
-            word_value = Scoring.get_word_value(self.scoring_type, valid_word, self.word_counter.get(valid_word))
+            num_player_who_guessed_word = self.word_counter.get(valid_word)
+
+            # Total players is the number of players that have at least one valid guess
+            total_players = len(self.valid_guesses.keys())
+
+            word_value = Scoring.get_word_value(
+                self.scoring_type, valid_word, num_player_who_guessed_word, total_players
+            )
 
             # Record the value of any words with a non-zero value
             if word_value > 0:

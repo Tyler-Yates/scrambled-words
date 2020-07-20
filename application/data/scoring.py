@@ -21,10 +21,19 @@ class Scoring:
         return 0
 
     @staticmethod
-    def get_word_value(scoring_type: ScoringType, word: str, num_player_who_guessed_word: int) -> Union[int, float]:
+    def get_word_value(
+        scoring_type: ScoringType, word: str, num_player_who_guessed_word: int, total_players: int
+    ) -> Union[int, float]:
         if scoring_type == ScoringType.CLASSIC:
+            # If multiple players guessed the word, it is worth nothing
+            if num_player_who_guessed_word > 1:
+                return 0
             return Scoring.get_classic_word_value(word)
         else:
+            # Words that everyone guessed should not count for points
+            if num_player_who_guessed_word == total_players:
+                return 0
+
             # Distributed scoring takes into account the number of players who guessed a word
             distributed_value: float = Scoring.get_classic_word_value(word) / num_player_who_guessed_word
 
