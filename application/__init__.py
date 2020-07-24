@@ -26,6 +26,7 @@ def create_flask_app() -> Flask:
     from .networking import main as main_blueprint
 
     app.register_blueprint(main_blueprint)
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 60
 
     socketio.init_app(app)
 

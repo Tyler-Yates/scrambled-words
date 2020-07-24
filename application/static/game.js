@@ -37,6 +37,15 @@ $(document).ready(function () {
             add_valid_guess(item);
         });
 
+        // Update player scores
+        const roundScoreDiv = document.getElementById("round-score-div");
+        roundScoreDiv.innerHTML = "";
+
+        if (data.hasOwnProperty("player_total_score")) {
+            const totalScoreDiv = document.getElementById("total-score-div");
+            totalScoreDiv.innerHTML = String(data.player_total_score);
+        }
+
         // Ensure buttons and input are in the right state
         const guessButtonElement = document.getElementById("guessWordSubmit");
         if (guessButtonElement.hasAttribute("disabled")) {
@@ -51,11 +60,11 @@ $(document).ready(function () {
     socket.on("game_over", function (data) {
         console.log(data);
 
-        let totalScore = 0;
+        let roundScore = 0;
 
         data.scored_words.forEach(function (item, index) {
             const score = data.scored_word_values[index];
-            totalScore += score;
+            roundScore += score;
 
             const validGuessElement = document.getElementById(`valid-guess-${item}`);
             validGuessElement.innerHTML = `${item.toUpperCase()} +${score}`;
@@ -72,8 +81,11 @@ $(document).ready(function () {
             validGuessElement.classList.add("unscored-word");
         });
 
-        const scoreDiv = document.getElementById("score-div");
-        scoreDiv.innerHTML = String(totalScore);
+        const roundScoreDiv = document.getElementById("round-score-div");
+        roundScoreDiv.innerHTML = String(roundScore);
+
+        const totalScoreDiv = document.getElementById("total-score-div");
+        totalScoreDiv.innerHTML = String(data.total_score);
     });
 
     // Add event listeners to the buttons

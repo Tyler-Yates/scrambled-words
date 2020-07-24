@@ -41,7 +41,6 @@ class GameState:
         self.game_running = True
         self.end_game_timer: Timer = None
 
-        # TODO save scores server-side
         self.scores: Dict[str, int] = {}
 
         self.new_board(tiles)
@@ -73,11 +72,21 @@ class GameState:
         self.game_running = False
         self._log_info("Game ended")
 
-    def get_game_state(self, player_id: str = None):
+    def get_game_state(self, player_id: str = None) -> Dict[str, object]:
+        """
+        Returns the state of the game when a player joins or reloads the game.
+
+        Args:
+            player_id: the ID of the player joining or reloading the game
+
+        Returns:
+            the game state
+        """
         game_state = {"expire_time": self.expire_time, "tiles": self.game_tiles}
         if player_id:
             # Set is not serializable so turn it into a set
             game_state["player_guesses"] = list(self.valid_guesses.get(player_id, {}))
+            game_state["player_total_score"] = self.scores.get(player_id, 0)
         else:
             # No player_id indicates a reset of the game so send empty guesses list
             game_state["player_guesses"] = []
@@ -146,6 +155,7 @@ class GameState:
         scored_words_values = []
         scored_words_guessers = []
         unscored_words = []
+        round_score = 0
 
         # Total players is the number of players that have at least one valid guess
         total_players = len(self.valid_guesses.keys())
@@ -161,15 +171,24 @@ class GameState:
             if word_value > 0:
                 scored_words.append(valid_word)
                 scored_words_values.append(word_value)
+                round_score += word_value
                 scored_words_guessers.append(num_player_who_guessed_word)
             else:
                 unscored_words.append(valid_word)
 
+        # Update player's total score
+        if player_id in self.scores:
+            self.scores[player_id] = self.scores[player_id] + round_score
+        else:
+            self.scores[player_id] = round_score
+
+        # Send the JSON data back to the player
         return {
             "scored_words": scored_words,
             "scored_word_values": scored_words_values,
             "scored_word_guessers": scored_words_guessers,
-            "unscored_words": unscored_words
+            "unscored_words": unscored_words,
+            "total_score": self.scores[player_id],
         }
 
     def _word_is_on_board(self, guessed_word: str) -> Optional[List[int]]:
