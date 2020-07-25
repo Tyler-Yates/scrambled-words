@@ -75,7 +75,10 @@ def timer_expired_event(message):
 
     game_state = _get_game_manager().get_game_state(room)
 
-    emit("game_over", game_state.get_score_state(player_id), to=session_id)
+    if game_state:
+        emit("game_over", game_state.get_score_state(player_id), to=session_id)
+    else:
+        LOG.warning(f"Received timer_expired message from Player {player_id} for invalid game {room}")
 
 
 def _get_player_id() -> str:
