@@ -52,8 +52,17 @@
     font-size: 200%;
 }
 
-.score-div {
+#time-remaining-container {
+    padding-bottom: 30px;
+}
+
+#round-score-div {
     font-size: 200%;
+    padding-bottom: 100px;
+}
+
+#total-score-container {
+    font-size: 90%;
 }
 
 .scored-word {

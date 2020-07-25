@@ -39,7 +39,7 @@ $(document).ready(function () {
 
         // Update player scores
         const roundScoreDiv = document.getElementById("round-score-div");
-        roundScoreDiv.innerHTML = "";
+        roundScoreDiv.innerHTML = "_";
 
         if (data.hasOwnProperty("player_total_score")) {
             const totalScoreDiv = document.getElementById("total-score-div");
