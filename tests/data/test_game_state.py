@@ -18,7 +18,8 @@ class TestGameState:
             "z", "z", "z", "z", "z"
         ]
 
-        self.game_state = GameState("test", word_manager, tiles)
+        # Do not set a game timer as pytest cannot handle that
+        self.game_state = GameState("test", word_manager, tiles, game_timer=False)
 
     def test_guess_word_valid(self):
         assert self.game_state.guess_word("player", "set") is not None

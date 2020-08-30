@@ -26,10 +26,12 @@ class GameState:
         word_manager: WordManager,
         tiles: List[str] = None,
         scoring_type: ScoringType = ScoringType.CLASSIC,
+        game_timer: bool = True,
     ):
         """
         Generates a new game state.
         """
+        self.game_timer = game_timer
         self.game_name = game_name
         self.word_manager = word_manager
         self.scoring_type = scoring_type
@@ -58,10 +60,11 @@ class GameState:
         if self.end_game_timer:
             self.end_game_timer.cancel()
 
-        # Set up the new timer
-        self.expire_time = get_time_millis() + (TOTAL_TIME_SECONDS * 1000)
-        self.end_game_timer = Timer(TOTAL_TIME_SECONDS, self.end_game)
-        self.end_game_timer.start()
+        if self.game_timer:
+            # Set up the new timer
+            self.expire_time = get_time_millis() + (TOTAL_TIME_SECONDS * 1000)
+            self.end_game_timer = Timer(TOTAL_TIME_SECONDS, self.end_game)
+            self.end_game_timer.start()
 
         # Dictionary from player ID to Set of valid guesses
         self.valid_guesses = {}
